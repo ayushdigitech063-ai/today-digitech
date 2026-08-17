@@ -253,13 +253,22 @@ export default function AdminSettingsPage() {
     }
   };
 
+  const [mobileSidebarOpen, setMobileSidebarOpen] = useState(false);
+
   return (
     <ProtectedRoute requiredPermission="MANAGE_SETTINGS">
       <div style={{ display: 'flex', minHeight: '100vh', backgroundColor: '#F8FAFC' }}>
-        <AdminSidebar currentPath="/admin/settings" />
+        <AdminSidebar
+          currentPath="/admin/settings"
+          isOpenMobile={mobileSidebarOpen}
+          onCloseMobile={() => setMobileSidebarOpen(false)}
+        />
 
         <div style={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
-          <AdminHeader title="Website & Branding Settings" />
+          <AdminHeader
+            title="Website & Branding Settings"
+            onToggleSidebar={() => setMobileSidebarOpen((prev) => !prev)}
+          />
 
           <AdminContentContainer>
             {/* Header Banner */}
