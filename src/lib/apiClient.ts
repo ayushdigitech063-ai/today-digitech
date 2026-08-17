@@ -1,6 +1,7 @@
 import { getAccessToken, setAccessToken } from './tokenStore';
 
-const BASE_URL = '/api/v1';
+const configuredApiUrl = process.env.NEXT_PUBLIC_API_URL?.replace(/\/$/, '');
+const BASE_URL = configuredApiUrl || '/api/v1';
 
 export interface RefreshResult {
   accessToken: string;
