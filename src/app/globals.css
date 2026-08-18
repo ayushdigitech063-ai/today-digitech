@@ -100,6 +100,33 @@ button, input, select, textarea {
   background: var(--color-royal-blue);
 }
 
+/* Interactive Button Hover & Motion Effects */
+.btn {
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.btn:hover {
+  transform: translateY(-2px);
+}
+.btn:active {
+  transform: translateY(0);
+}
+.btn-accent:hover {
+  box-shadow: 0 12px 30px -4px rgba(255, 106, 0, 0.45);
+  filter: brightness(1.08);
+}
+.btn-primary:hover {
+  box-shadow: 0 12px 25px -5px rgba(6, 43, 99, 0.3);
+  filter: brightness(1.1);
+}
+.btn-secondary:hover {
+  box-shadow: 0 10px 20px -5px rgba(7, 68, 141, 0.35);
+  filter: brightness(1.1);
+}
+.btn-outline:hover {
+  background-color: var(--color-primary-navy);
+  color: #FFFFFF;
+}
+
 /* Responsive Container Utilities */
 .container {
   width: 100%;

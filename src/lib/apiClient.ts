@@ -58,7 +58,19 @@ export async function apiClient<T = any>(
   options: RequestInit = {},
   isRetry = false,
 ): Promise<ApiClientResponse<T>> {
-  const token = getAccessToken();
+  let token = getAccessToken();
+  const isAuthCheck =
+    endpoint.includes('/auth/login') ||
+    endpoint.includes('/auth/refresh-token') ||
+    endpoint.includes('/auth/logout');
+
+  if (!token && !isRetry && !isAuthCheck) {
+    const refreshRes = await refreshTokenRequest();
+    if (refreshRes?.accessToken) {
+      token = refreshRes.accessToken;
+    }
+  }
+
   const isFormData = typeof FormData !== 'undefined' && options.body instanceof FormData;
   const headers: Record<string, string> = {
     ...(isFormData ? {} : { 'Content-Type': 'application/json' }),

@@ -1,3 +1,6 @@
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
+
 import React from 'react';
 import { TopInfoBar } from '../components/layout/TopInfoBar';
 import { Header } from '../components/layout/Header';
@@ -12,6 +15,7 @@ import { Badge } from '../components/ui/Badge';
 import { Accordion } from '../components/ui/Accordion';
 import { FreeAuditForm } from '../components/forms/FreeAuditForm';
 import { HeroSlider } from '../components/home/HeroSlider';
+import { TrustedPartnersSection } from '../components/home/TrustedPartnersSection';
 import {
   ArrowRight,
   CheckCircle2,
@@ -92,10 +96,27 @@ export default async function HomePage() {
 
   const hero = settingsData.heroSection || defaultSettings.heroSection;
 
-  const servicesList = hpData.featuredServices || defaultHomepage.featuredServices!;
-  const caseStudies = hpData.caseStudies || defaultHomepage.caseStudies!;
-  const testimonialsList = hpData.testimonials || defaultHomepage.testimonials!;
-  const clientLogos = hpData.clients || defaultHomepage.clients!;
+  const servicesList =
+    hpData.featuredServices && hpData.featuredServices.length > 0
+      ? hpData.featuredServices
+      : defaultHomepage.featuredServices!;
+  const caseStudies =
+    hpData.caseStudies && hpData.caseStudies.length > 0
+      ? hpData.caseStudies
+      : defaultHomepage.caseStudies!;
+  const testimonialsList =
+    hpData.testimonials && hpData.testimonials.length > 0
+      ? hpData.testimonials
+      : defaultHomepage.testimonials!;
+  const clientLogos =
+    hpData.clients && hpData.clients.length > 0
+      ? hpData.clients
+      : defaultHomepage.clients!;
+
+  const finalPackagesList =
+    packagesList && packagesList.length > 0 ? packagesList : defaultPackages;
+  const finalFaqsList =
+    faqsList && faqsList.length > 0 ? faqsList : defaultFaqs;
 
   const processSteps = [
     { num: '01', title: 'Discovery & Architecture', desc: 'In-depth domain audit, technical roadmap, and system boundary design.' },
@@ -116,142 +137,11 @@ export default async function HomePage() {
       <HeroSlider initialHeroData={hero} />
 
       {/* 4. Trusted Partners & Brands Section (Exact Match to Reference Image) */}
-      <section
-        style={{
-          backgroundColor: '#F8FAFC',
-          padding: '4.5rem 0',
-          borderBottom: '1px solid var(--color-border)',
-          position: 'relative',
-          overflow: 'hidden',
-        }}
-      >
-        {/* Subtle Decorative Background Pattern Dots on Sides */}
-        <div
-          style={{
-            position: 'absolute',
-            top: 0,
-            left: 0,
-            width: '120px',
-            height: '100%',
-            backgroundImage: 'radial-gradient(#CBD5E1 1.5px, transparent 1.5px)',
-            backgroundSize: '16px 16px',
-            opacity: 0.5,
-            pointerEvents: 'none',
-          }}
-        />
-        <div
-          style={{
-            position: 'absolute',
-            top: 0,
-            right: 0,
-            width: '120px',
-            height: '100%',
-            backgroundImage: 'radial-gradient(#CBD5E1 1.5px, transparent 1.5px)',
-            backgroundSize: '16px 16px',
-            opacity: 0.5,
-            pointerEvents: 'none',
-          }}
-        />
-
-        <Container style={{ position: 'relative', zIndex: 1 }}>
-          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center', gap: '0.75rem', marginBottom: '3rem' }}>
-            <span
-              style={{
-                fontSize: '0.8125rem',
-                fontWeight: 800,
-                letterSpacing: '0.14em',
-                textTransform: 'uppercase',
-                color: '#2563EB',
-              }}
-            >
-              {settingsData.partnersSection?.topCaption || 'TRUSTED BY BUSINESSES & GROWING TEAMS'}
-            </span>
-
-            {/* Small Orange Accent Bar */}
-            <div style={{ width: '32px', height: '3px', backgroundColor: 'var(--color-orange)', borderRadius: '2px', margin: '0.2rem 0' }} />
-
-            <h2
-              style={{
-                fontSize: 'clamp(1.5rem, 3.5vw, 2.25rem)',
-                fontWeight: 800,
-                color: '#0F172A',
-                letterSpacing: '-0.02em',
-                maxWidth: '720px',
-                lineHeight: 1.25,
-              }}
-            >
-              {settingsData.partnersSection?.headlineText || 'We’re proud to partner with ambitious companies across industries.'}
-            </h2>
-          </div>
-
-          {/* Brand Logos with Vertical Dividers (Fully Responsive Grid/Flex) */}
-          <div
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              flexWrap: 'wrap',
-              gap: '1.5rem',
-            }}
-          >
-            {(clientLogos && clientLogos.length > 0
-              ? clientLogos.map((c) => ({ name: c.name, logoUrl: c.logoUrl, color: '#00539B', symbol: '' }))
-              : [
-                  { name: 'TATA', color: '#00539B', symbol: '🔷' },
-                  { name: 'PhonePe', color: '#5F259F', symbol: 'पे' },
-                  { name: 'ACKO', color: '#7B2CBF', symbol: '🟣' },
-                  { name: 'DREAM11', color: '#E10600', symbol: '🏆' },
-                  { name: 'zepto', color: '#FF0055', symbol: '' },
-                  { name: 'lenskart', color: '#000042', symbol: '👓' },
-                ]
-            ).map((brand, idx, arr) => (
-              <React.Fragment key={idx}>
-                <div
-                  style={{
-                    padding: '0.5rem 1.75rem',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    gap: '0.5rem',
-                  }}
-                >
-                  {'logoUrl' in brand && brand.logoUrl ? (
-                    <img src={brand.logoUrl} alt={brand.name} style={{ maxHeight: '32px', maxWidth: '120px', objectFit: 'contain' }} />
-                  ) : (
-                    <>
-                      {brand.symbol && (
-                        <span style={{ fontSize: '1.2rem', fontWeight: 800, color: brand.color }}>
-                          {brand.symbol}
-                        </span>
-                      )}
-                      <span
-                        style={{
-                          fontSize: '1.25rem',
-                          fontWeight: 900,
-                          color: brand.color,
-                          letterSpacing: '-0.02em',
-                        }}
-                      >
-                        {brand.name}
-                      </span>
-                    </>
-                  )}
-                </div>
-                {idx < arr.length - 1 && (
-                  <div
-                    className="partner-divider"
-                    style={{
-                      width: '1px',
-                      height: '24px',
-                      backgroundColor: '#CBD5E1',
-                    }}
-                  />
-                )}
-              </React.Fragment>
-            ))}
-          </div>
-        </Container>
-      </section>
+      <TrustedPartnersSection
+        topCaption={settingsData.partnersSection?.topCaption}
+        headlineText={settingsData.partnersSection?.headlineText}
+        clientLogos={clientLogos}
+      />
 
       {/* 5. Services Grid */}
       <section style={{ padding: '5rem 0' }}>
@@ -331,7 +221,7 @@ export default async function HomePage() {
             description="Clear project scopes backed by enterprise SLA guarantees and source code ownership."
           />
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '2rem' }}>
-            {packagesList.map((pkg, idx) => (
+            {finalPackagesList.map((pkg, idx) => (
               <Card key={idx} style={{ padding: '2.5rem', display: 'flex', flexDirection: 'column', gap: '1.25rem', border: pkg.isPopular || pkg.isRecommended ? '2px solid var(--color-orange)' : '1px solid var(--color-border)', position: 'relative' }}>
                 {(pkg.isPopular || pkg.isRecommended) && (
                   <span style={{ position: 'absolute', top: '-12px', right: '20px', backgroundColor: 'var(--color-orange)', color: '#FFFFFF', padding: '0.2rem 0.75rem', borderRadius: '9999px', fontSize: '0.75rem', fontWeight: 800, textTransform: 'uppercase' }}>
@@ -449,7 +339,7 @@ export default async function HomePage() {
             description="Clear answers regarding project timelines, tech stacks, SLAs, and deliverables."
           />
           <div style={{ maxWidth: '800px', margin: '0 auto' }}>
-            <Accordion items={faqsList.map((f, idx) => ({ id: f.id || `faq-${idx}`, title: f.title, content: f.content }))} />
+            <Accordion items={finalFaqsList.map((f, idx) => ({ id: f.id || `faq-${idx}`, title: f.title, content: f.content }))} />
           </div>
         </Container>
       </section>
