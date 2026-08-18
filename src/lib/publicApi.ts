@@ -47,6 +47,21 @@ const configuredApiUrl = process.env.NEXT_PUBLIC_API_URL?.replace(/\/$/, '');
 const apiBaseUrl = configuredApiUrl || '/api/v1';
 const publicApiBaseUrl = apiBaseUrl.endsWith('/public') ? apiBaseUrl : `${apiBaseUrl}/public`;
 
+export const getMediaUrl = (url?: string): string => {
+  if (!url) return '';
+  if (url.startsWith('http://') || url.startsWith('https://') || url.startsWith('data:')) {
+    return url;
+  }
+  if (url.startsWith('/uploads/')) {
+    let origin = (configuredApiUrl || 'http://localhost:5000/api/v1').replace(/\/api\/v1\/?$/, '');
+    if (typeof window !== 'undefined' && window.location.hostname === 'localhost' && !configuredApiUrl?.includes('localhost')) {
+      origin = 'http://localhost:5000';
+    }
+    return `${origin}${url}`;
+  }
+  return url;
+};
+
 export const buildPublicApiUrl = (path: string): string =>
   path.startsWith('http') ? path : `${publicApiBaseUrl}${path.startsWith('/') ? path : `/${path}`}`;
 
@@ -189,7 +204,7 @@ export const getPublicCmsData = async <T>(path: string): Promise<CmsDataResult<T
 
 export async function fetchPublicData<T>(endpoint: string, fallbackData: T): Promise<T> {
   try {
-    return await getPublicData<T>(endpoint);
+    return await getPublicData<T>(endpoint, { timeoutMs: 1200 });
   } catch {
     return fallbackData;
   }

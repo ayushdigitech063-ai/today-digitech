@@ -64,7 +64,7 @@ export const defaultSettings: WebsiteSettingsDTO = {
 
 export async function fetchPublicSettings(): Promise<WebsiteSettingsDTO> {
   try {
-    return await getPublicData<WebsiteSettingsDTO>('/settings');
+    return await getPublicData<WebsiteSettingsDTO>('/settings', { timeoutMs: 1200, cache: 'no-store' });
   } catch {
     return defaultSettings;
   }

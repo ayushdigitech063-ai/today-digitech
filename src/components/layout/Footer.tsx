@@ -4,6 +4,7 @@ import React, { useState, useEffect } from 'react';
 import { Mail, Phone, MapPin, Facebook, Twitter, Linkedin, Instagram, ArrowRight } from 'lucide-react';
 import { WebsiteSettingsDTO } from '@today-digitech/shared';
 import { defaultSettings, fetchPublicSettings } from '../../lib/api';
+import { getMediaUrl } from '../../lib/publicApi';
 
 export interface FooterProps {
   settings?: WebsiteSettingsDTO;
@@ -42,24 +43,33 @@ export const Footer: React.FC<FooterProps> = ({ settings: initialSettings }) => 
           {/* Company Info Column */}
           <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
-              {settings.footerLogoUrl && !settings.footerLogoUrl.endsWith('.svg') ? (
-                <img src={settings.footerLogoUrl} alt={settings.businessName || 'Today Digitech Logo'} style={{ height: '36px', width: 'auto', display: 'block' }} />
+              {settings.footerLogoUrl ? (
+                <img
+                  src={getMediaUrl(settings.footerLogoUrl)}
+                  alt={settings.businessName || 'Today Digitech Logo'}
+                  style={{ height: '40px', width: 'auto', display: 'block', objectFit: 'contain' }}
+                  onError={(e) => {
+                    (e.target as HTMLElement).style.display = 'none';
+                  }}
+                />
               ) : (
-                <svg width="36" height="36" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <rect width="40" height="40" rx="10" fill="url(#footer_logo_grad)" />
-                  <path d="M12 14L20 9L28 14V26L20 31L12 26V14Z" stroke="white" strokeWidth="2.5" strokeLinejoin="round" />
-                  <circle cx="20" cy="20" r="4" fill="#FF6A00" />
-                  <defs>
-                    <linearGradient id="footer_logo_grad" x1="0" y1="0" x2="40" y2="40" gradientUnits="userSpaceOnUse">
-                      <stop stopColor="#062B63" />
-                      <stop offset="1" stopColor="#07448D" />
-                    </linearGradient>
-                  </defs>
-                </svg>
+                <>
+                  <svg width="36" height="36" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <rect width="40" height="40" rx="10" fill="url(#footer_logo_grad)" />
+                    <path d="M12 14L20 9L28 14V26L20 31L12 26V14Z" stroke="white" strokeWidth="2.5" strokeLinejoin="round" />
+                    <circle cx="20" cy="20" r="4" fill="#FF6A00" />
+                    <defs>
+                      <linearGradient id="footer_logo_grad" x1="0" y1="0" x2="40" y2="40" gradientUnits="userSpaceOnUse">
+                        <stop stopColor="#062B63" />
+                        <stop offset="1" stopColor="#07448D" />
+                      </linearGradient>
+                    </defs>
+                  </svg>
+                  <span style={{ fontSize: '1.25rem', fontWeight: 800, color: '#FFFFFF', letterSpacing: '-0.02em' }}>
+                    {(settings.businessName || 'Today Digitech').split(' ')[0]}<span style={{ color: 'var(--color-orange)' }}>{(settings.businessName || 'Today Digitech').split(' ')[1] || ''}</span>
+                  </span>
+                </>
               )}
-              <span style={{ fontSize: '1.25rem', fontWeight: 800, color: '#FFFFFF', letterSpacing: '-0.02em' }}>
-                {settings.businessName.split(' ')[0]}<span style={{ color: 'var(--color-orange)' }}>{settings.businessName.split(' ')[1] || ''}</span>
-              </span>
             </div>
             <p style={{ fontSize: '0.875rem', lineHeight: 1.6, color: '#94A3B8' }}>
               {settings.footerDescription}

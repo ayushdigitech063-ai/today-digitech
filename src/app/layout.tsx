@@ -19,6 +19,7 @@ export const metadata = {
 };
 
 import { AnalyticsScripts } from '../components/analytics/AnalyticsScripts';
+import { Preloader } from '../components/layout/Preloader';
 
 export default function RootLayout({
   children,
@@ -28,6 +29,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body>
+        <Preloader />
         <AnalyticsScripts />
         <StructuredData data={organizationSchema} />
         {children}

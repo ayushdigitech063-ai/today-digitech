@@ -9,6 +9,7 @@ import { MobileNavDrawer } from './MobileNavDrawer';
 import { ChevronDown, Menu, Lock, ArrowRight } from 'lucide-react';
 import { WebsiteSettingsDTO } from '@today-digitech/shared';
 import { defaultSettings, fetchPublicSettings } from '../../lib/api';
+import { getMediaUrl } from '../../lib/publicApi';
 
 export interface HeaderProps {
   settings?: WebsiteSettingsDTO;
@@ -20,10 +21,14 @@ export const Header: React.FC<HeaderProps> = ({ settings: initialSettings }) => 
   const [isMegaMenuOpen, setIsMegaMenuOpen] = useState(false);
   const [isMobileNavOpen, setIsMobileNavOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
+  const [logoError, setLogoError] = useState(false);
 
   useEffect(() => {
     fetchPublicSettings().then((s) => {
-      if (s) setSettings(s);
+      if (s) {
+        setSettings(s);
+        setLogoError(false);
+      }
     });
 
     const handleScroll = () => {
@@ -84,31 +89,38 @@ export const Header: React.FC<HeaderProps> = ({ settings: initialSettings }) => 
         >
           {/* Brand Logo */}
           <Link href="/" style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', textDecoration: 'none' }}>
-            {settings.headerLogoUrl && !settings.headerLogoUrl.endsWith('.svg') ? (
-              <img src={settings.headerLogoUrl} alt={settings.businessName || 'Today Digitech Logo'} style={{ height: '40px', width: 'auto', display: 'block' }} />
+            {!logoError && settings.headerLogoUrl ? (
+              <img
+                src={getMediaUrl(settings.headerLogoUrl)}
+                alt={settings.businessName || 'Today Digitech Logo'}
+                style={{ height: '42px', width: 'auto', display: 'block', objectFit: 'contain' }}
+                onError={() => setLogoError(true)}
+              />
             ) : (
-              <div style={{ position: 'relative', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                <svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <rect width="40" height="40" rx="10" fill="url(#header_logo_grad)" />
-                  <path d="M12 14L20 9L28 14V26L20 31L12 26V14Z" stroke="white" strokeWidth="2.5" strokeLinejoin="round" />
-                  <circle cx="20" cy="20" r="4" fill="#FF6A00" />
-                  <defs>
-                    <linearGradient id="header_logo_grad" x1="0" y1="0" x2="40" y2="40" gradientUnits="userSpaceOnUse">
-                      <stop stopColor="#062B63" />
-                      <stop offset="1" stopColor="#07448D" />
-                    </linearGradient>
-                  </defs>
-                </svg>
-              </div>
+              <>
+                <div style={{ position: 'relative', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                  <svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <rect width="40" height="40" rx="10" fill="url(#header_logo_grad)" />
+                    <path d="M12 14L20 9L28 14V26L20 31L12 26V14Z" stroke="white" strokeWidth="2.5" strokeLinejoin="round" />
+                    <circle cx="20" cy="20" r="4" fill="#FF6A00" />
+                    <defs>
+                      <linearGradient id="header_logo_grad" x1="0" y1="0" x2="40" y2="40" gradientUnits="userSpaceOnUse">
+                        <stop stopColor="#062B63" />
+                        <stop offset="1" stopColor="#07448D" />
+                      </linearGradient>
+                    </defs>
+                  </svg>
+                </div>
+                <div style={{ display: 'flex', flexDirection: 'column' }}>
+                  <span style={{ fontSize: '1.25rem', fontWeight: 800, color: logoTextColor, letterSpacing: '-0.02em', lineHeight: 1.1, transition: 'color 0.3s ease' }}>
+                    {(settings.businessName || 'Today Digitech').split(' ')[0]}<span style={{ color: 'var(--color-orange)' }}>{(settings.businessName || 'Today Digitech').split(' ')[1] || 'DIGITECH'}</span>
+                  </span>
+                  <span style={{ fontSize: '0.625rem', fontWeight: 700, color: isScrolled ? '#64748B' : '#94A3B8', letterSpacing: '0.12em', transition: 'color 0.3s ease' }}>
+                    DIGITAL SOLUTIONS
+                  </span>
+                </div>
+              </>
             )}
-            <div style={{ display: 'flex', flexDirection: 'column' }}>
-              <span style={{ fontSize: '1.25rem', fontWeight: 800, color: logoTextColor, letterSpacing: '-0.02em', lineHeight: 1.1, transition: 'color 0.3s ease' }}>
-                {settings.businessName.split(' ')[0]}<span style={{ color: 'var(--color-orange)' }}>{settings.businessName.split(' ')[1] || 'DIGITECH'}</span>
-              </span>
-              <span style={{ fontSize: '0.625rem', fontWeight: 700, color: isScrolled ? '#64748B' : '#94A3B8', letterSpacing: '0.12em', transition: 'color 0.3s ease' }}>
-                DIGITAL SOLUTIONS
-              </span>
-            </div>
           </Link>
 
           {/* Desktop Navigation Links */}

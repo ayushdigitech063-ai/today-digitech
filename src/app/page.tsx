@@ -11,6 +11,7 @@ import { Card } from '../components/ui/Card';
 import { Badge } from '../components/ui/Badge';
 import { Accordion } from '../components/ui/Accordion';
 import { FreeAuditForm } from '../components/forms/FreeAuditForm';
+import { HeroSlider } from '../components/home/HeroSlider';
 import {
   ArrowRight,
   CheckCircle2,
@@ -82,10 +83,12 @@ const defaultFaqs: FaqItem[] = [
 ];
 
 export default async function HomePage() {
-  const hpData = await fetchPublicData<HomepagePayload>('/homepage', defaultHomepage);
-  const settingsData = await fetchPublicSettings();
-  const packagesList = await fetchPublicData<PackageItem[]>('/packages', defaultPackages);
-  const faqsList = await fetchPublicData<FaqItem[]>('/faqs', defaultFaqs);
+  const [hpData, settingsData, packagesList, faqsList] = await Promise.all([
+    fetchPublicData<HomepagePayload>('/homepage', defaultHomepage),
+    fetchPublicSettings(),
+    fetchPublicData<PackageItem[]>('/packages', defaultPackages),
+    fetchPublicData<FaqItem[]>('/faqs', defaultFaqs),
+  ]);
 
   const hero = settingsData.heroSection || defaultSettings.heroSection;
 
@@ -109,203 +112,8 @@ export default async function HomePage() {
       {/* 2. Header */}
       <Header />
 
-      {/* 3. Hero Section (Matching Reference Image) */}
-      <section
-        style={{
-          background: 'radial-gradient(120% 120% at 50% -10%, #082E66 0%, #031735 60%, #010B1B 100%)',
-          padding: '4rem 0 5rem',
-          color: '#FFFFFF',
-          position: 'relative',
-          overflow: 'hidden',
-        }}
-      >
-        {/* Glow Effects */}
-        <div style={{ position: 'absolute', top: '10%', right: '15%', width: '450px', height: '450px', background: 'radial-gradient(circle, rgba(59, 130, 246, 0.25) 0%, rgba(0,0,0,0) 70%)', filter: 'blur(50px)', pointerEvents: 'none' }} />
-        <div style={{ position: 'absolute', bottom: '10%', left: '10%', width: '450px', height: '450px', background: 'radial-gradient(circle, rgba(255, 106, 0, 0.18) 0%, rgba(0,0,0,0) 70%)', filter: 'blur(50px)', pointerEvents: 'none' }} />
-
-        <Container style={{ position: 'relative', zIndex: 1 }}>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '3.5rem', alignItems: 'center', minHeight: '520px' }}>
-            
-            {/* Left Column: Heading & CTAs */}
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem', maxWidth: '600px' }}>
-              <div style={{ display: 'inline-flex' }}>
-                <span
-                  style={{
-                    backgroundColor: 'rgba(255, 106, 0, 0.12)',
-                    color: '#FF8A33',
-                    border: '1px solid rgba(255, 106, 0, 0.3)',
-                    padding: '0.4rem 1rem',
-                    borderRadius: '9999px',
-                    fontSize: '0.75rem',
-                    fontWeight: 800,
-                    letterSpacing: '0.08em',
-                    textTransform: 'uppercase',
-                    display: 'inline-flex',
-                    alignItems: 'center',
-                    gap: '0.4rem',
-                  }}
-                >
-                  <Sparkles size={14} color="#FF8A33" /> {hero?.badgeText || 'DIGITAL TRANSFORMATION • ENGINEERING • INNOVATION'}
-                </span>
-              </div>
-
-              <h1
-                style={{
-                  fontSize: 'clamp(2.75rem, 5vw, 4rem)',
-                  fontWeight: 900,
-                  lineHeight: 1.1,
-                  color: '#FFFFFF',
-                  letterSpacing: '-0.03em',
-                }}
-              >
-                {hero?.headlineTitle || 'Building Digital Products That'} <span style={{ color: 'var(--color-orange)' }}>{hero?.headlineAccent || 'Move Businesses Forward'}</span>
-              </h1>
-
-              <p style={{ fontSize: '1.125rem', color: '#94A3B8', lineHeight: 1.65 }}>
-                {hero?.subdescription || 'We build scalable web, mobile, AI and cloud solutions that drive innovation, growth and long-term impact.'}
-              </p>
-
-              {/* Tech Badges */}
-              <div style={{ display: 'flex', alignItems: 'center', gap: '1.25rem', flexWrap: 'wrap', fontSize: '0.875rem', color: '#CBD5E1', fontWeight: 600 }}>
-                <span style={{ display: 'flex', alignItems: 'center', gap: '0.35rem' }}><Code2 size={16} color="#FF6A00" /> Next.js</span>
-                <span>•</span>
-                <span>📱 Mobile</span>
-                <span>•</span>
-                <span>☁️ Cloud</span>
-                <span>•</span>
-                <span>✨ AI</span>
-                <span>•</span>
-                <span>♾️ DevOps</span>
-              </div>
-
-              {/* Action Buttons */}
-              <div style={{ display: 'flex', gap: '1.25rem', flexWrap: 'wrap', alignItems: 'center', paddingTop: '0.5rem' }}>
-                <a href={hero?.primaryCtaHref || '/contact'} style={{ textDecoration: 'none' }}>
-                  <Button variant="accent" size="lg" icon={<ArrowRight size={18} />}>
-                    {hero?.primaryCtaText || 'Start a Project'}
-                  </Button>
-                </a>
-                <a href={hero?.secondaryCtaHref || '/portfolio'} style={{ textDecoration: 'none' }}>
-                  <button
-                    style={{
-                      padding: '0.875rem 2.25rem',
-                      fontSize: '1rem',
-                      fontWeight: 700,
-                      borderRadius: 'var(--radius-md)',
-                      backgroundColor: 'rgba(255, 255, 255, 0.05)',
-                      color: '#FFFFFF',
-                      border: '1.5px solid rgba(255, 255, 255, 0.25)',
-                      cursor: 'pointer',
-                      display: 'inline-flex',
-                      alignItems: 'center',
-                      gap: '0.5rem',
-                      backdropFilter: 'blur(10px)',
-                    }}
-                  >
-                    <span>▷</span> {hero?.secondaryCtaText || 'View Our Work'}
-                  </button>
-                </a>
-              </div>
-
-              {/* Trust Avatars */}
-              <div style={{ display: 'flex', alignItems: 'center', gap: '0.85rem', paddingTop: '0.75rem' }}>
-                <div style={{ display: 'flex' }}>
-                  {['/client1.png', '/client2.png', '/client3.png'].map((_, i) => (
-                    <div key={i} style={{ width: '32px', height: '32px', borderRadius: '50%', border: '2px solid #031735', backgroundColor: '#07448D', marginLeft: i > 0 ? '-10px' : 0, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.75rem', fontWeight: 800, color: '#FFF' }}>
-                      {['A', 'R', 'S'][i]}
-                    </div>
-                  ))}
-                </div>
-                <span style={{ fontSize: '0.875rem', color: '#94A3B8', fontWeight: 500 }}>
-                  {hero?.trustedText || 'Trusted by 50+ companies worldwide'}
-                </span>
-              </div>
-            </div>
-
-            {/* Right Column: High Quality 3D Tech Dashboard Image Visual */}
-            <div style={{ position: 'relative', width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-              <div
-                style={{
-                  position: 'relative',
-                  width: '100%',
-                  borderRadius: '20px',
-                  overflow: 'hidden',
-                  boxShadow: '0 25px 60px -10px rgba(0, 0, 0, 0.7), 0 0 50px rgba(59, 130, 246, 0.35)',
-                  border: '1px solid rgba(255, 255, 255, 0.2)',
-                  lineHeight: 0,
-                }}
-              >
-                <img
-                  src={hero?.heroImageUrl || '/images/hero_dashboard.jpg'}
-                  alt="Today Digitech 3D Technology & Analytics Platform"
-                  style={{
-                    width: '100%',
-                    height: 'auto',
-                    objectFit: 'cover',
-                    display: 'block',
-                  }}
-                />
-              </div>
-            </div>
-          </div>
-
-          {/* Bottom 4 Key Stats Bar (Exact Match to Image) */}
-          <div
-            style={{
-              marginTop: '3.5rem',
-              padding: '1.75rem 2rem',
-              backgroundColor: 'rgba(6, 25, 54, 0.8)',
-              borderRadius: '20px',
-              border: '1px solid rgba(255, 255, 255, 0.1)',
-              backdropFilter: 'blur(16px)',
-              display: 'grid',
-              gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
-              gap: '2rem',
-            }}
-          >
-            {/* Stat 1 */}
-            <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
-              <div style={{ width: '48px', height: '48px', borderRadius: '12px', backgroundColor: 'rgba(255, 106, 0, 0.15)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#FF6A00', fontSize: '1.25rem' }}>🚀</div>
-              <div>
-                <div style={{ fontSize: '1.5rem', fontWeight: 900, color: '#FFFFFF', lineHeight: 1.1 }}>50+</div>
-                <div style={{ fontSize: '0.8125rem', color: '#94A3B8', fontWeight: 600 }}>Projects Delivered</div>
-                <div style={{ fontSize: '0.75rem', color: '#64748B' }}>Across 15+ Countries</div>
-              </div>
-            </div>
-
-            {/* Stat 2 */}
-            <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
-              <div style={{ width: '48px', height: '48px', borderRadius: '12px', backgroundColor: 'rgba(59, 130, 246, 0.15)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#3B82F6', fontSize: '1.25rem' }}>🛡️</div>
-              <div>
-                <div style={{ fontSize: '1.5rem', fontWeight: 900, color: '#FFFFFF', lineHeight: 1.1 }}>99.9%</div>
-                <div style={{ fontSize: '0.8125rem', color: '#94A3B8', fontWeight: 600 }}>Uptime & Reliability</div>
-                <div style={{ fontSize: '0.75rem', color: '#64748B' }}>Enterprise Grade</div>
-              </div>
-            </div>
-
-            {/* Stat 3 */}
-            <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
-              <div style={{ width: '48px', height: '48px', borderRadius: '12px', backgroundColor: 'rgba(168, 85, 247, 0.15)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#A855F7', fontSize: '1.25rem' }}>👥</div>
-              <div>
-                <div style={{ fontSize: '1.5rem', fontWeight: 900, color: '#FFFFFF', lineHeight: 1.1 }}>40+</div>
-                <div style={{ fontSize: '0.8125rem', color: '#94A3B8', fontWeight: 600 }}>Experts & Engineers</div>
-                <div style={{ fontSize: '0.75rem', color: '#64748B' }}>Passionate Professionals</div>
-              </div>
-            </div>
-
-            {/* Stat 4 */}
-            <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
-              <div style={{ width: '48px', height: '48px', borderRadius: '12px', backgroundColor: 'rgba(16, 185, 129, 0.15)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#10B981', fontSize: '1.25rem' }}>🌐</div>
-              <div>
-                <div style={{ fontSize: '1.5rem', fontWeight: 900, color: '#FFFFFF', lineHeight: 1.1 }}>24/7</div>
-                <div style={{ fontSize: '0.8125rem', color: '#94A3B8', fontWeight: 600 }}>Support & Monitoring</div>
-                <div style={{ fontSize: '0.75rem', color: '#64748B' }}>We're Always Here</div>
-              </div>
-            </div>
-
-          </div>
-        </Container>
-      </section>
+      {/* 3. Interactive Multi-Slide Hero Banner Slider */}
+      <HeroSlider initialHeroData={hero} />
 
       {/* 4. Trusted Partners & Brands Section (Exact Match to Reference Image) */}
       <section

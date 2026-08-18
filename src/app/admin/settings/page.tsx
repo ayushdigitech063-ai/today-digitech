@@ -7,6 +7,7 @@ import { AdminHeader } from '@/components/admin/layout/AdminHeader';
 import { AdminContentContainer } from '@/components/admin/layout/AdminContentContainer';
 import { ProtectedRoute } from '@/components/admin/auth/ProtectedRoute';
 import { apiClient } from '@/lib/apiClient';
+import { getMediaUrl } from '@/lib/publicApi';
 import { Globe, Phone, Search, Save, Check, Layout, BarChart2, Loader2, AlertCircle, Sparkles, ChevronDown, Upload, Megaphone, Image as ImageIcon, Handshake } from 'lucide-react';
 
 export default function AdminSettingsPage() {
@@ -425,6 +426,12 @@ export default function AdminSettingsPage() {
                             <input type="file" accept="image/*" onChange={(e) => void handleLogoUpload(e, setHeaderLogoUrl, setUploadingHeaderLogo)} disabled={uploadingHeaderLogo} style={{ display: 'none' }} />
                           </label>
                         </div>
+                        {headerLogoUrl && (
+                          <div style={{ marginTop: '0.25rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                            <span style={{ fontSize: '0.75rem', color: '#64748B', fontWeight: 600 }}>Live Preview:</span>
+                            <img src={getMediaUrl(headerLogoUrl)} alt="Header Logo Preview" style={{ height: '32px', maxWidth: '160px', objectFit: 'contain', backgroundColor: '#031735', padding: '4px 8px', borderRadius: '6px' }} />
+                          </div>
+                        )}
                       </div>
 
                       {/* Footer Logo Field */}
@@ -438,6 +445,12 @@ export default function AdminSettingsPage() {
                             <input type="file" accept="image/*" onChange={(e) => void handleLogoUpload(e, setFooterLogoUrl, setUploadingFooterLogo)} disabled={uploadingFooterLogo} style={{ display: 'none' }} />
                           </label>
                         </div>
+                        {footerLogoUrl && (
+                          <div style={{ marginTop: '0.25rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                            <span style={{ fontSize: '0.75rem', color: '#64748B', fontWeight: 600 }}>Live Preview:</span>
+                            <img src={getMediaUrl(footerLogoUrl)} alt="Footer Logo Preview" style={{ height: '32px', maxWidth: '160px', objectFit: 'contain', backgroundColor: '#031735', padding: '4px 8px', borderRadius: '6px' }} />
+                          </div>
+                        )}
                       </div>
 
                       {/* Admin Logo Field */}
@@ -451,6 +464,12 @@ export default function AdminSettingsPage() {
                             <input type="file" accept="image/*" onChange={(e) => void handleLogoUpload(e, setAdminPanelLogoUrl, setUploadingAdminLogo)} disabled={uploadingAdminLogo} style={{ display: 'none' }} />
                           </label>
                         </div>
+                        {adminPanelLogoUrl && (
+                          <div style={{ marginTop: '0.25rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                            <span style={{ fontSize: '0.75rem', color: '#64748B', fontWeight: 600 }}>Live Preview:</span>
+                            <img src={getMediaUrl(adminPanelLogoUrl)} alt="Admin Logo Preview" style={{ height: '32px', maxWidth: '160px', objectFit: 'contain', backgroundColor: '#031735', padding: '4px 8px', borderRadius: '6px' }} />
+                          </div>
+                        )}
                       </div>
                     </div>
                   )}
