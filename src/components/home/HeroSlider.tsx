@@ -224,8 +224,10 @@ export function HeroSlider({ initialHeroData }: HeroSliderProps) {
 
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isFading, setIsFading] = useState(false);
+  const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
+    setMounted(true);
     const timer = setInterval(() => {
       setIsFading(true);
       setTimeout(() => {
@@ -252,11 +254,7 @@ export function HeroSlider({ initialHeroData }: HeroSliderProps) {
     <section
       style={{
         background: 'radial-gradient(120% 120% at 50% -10%, #0F3B7A 0%, #0A2540 55%, #07192E 100%)',
-        minHeight: 'calc(100vh - 120px)',
-        display: 'flex',
-        flexDirection: 'column',
-        justifyContent: 'center',
-        padding: '3rem 0 3.5rem',
+        padding: '3.5rem 0 3.5rem',
         color: '#FFFFFF',
         position: 'relative',
         overflow: 'hidden',
@@ -288,15 +286,27 @@ export function HeroSlider({ initialHeroData }: HeroSliderProps) {
         }}
       />
 
-      <Container style={{ position: 'relative', zIndex: 1, flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
+      <Container
+        style={{
+          position: 'relative',
+          zIndex: 1,
+          display: 'flex',
+          flexDirection: 'column',
+          justifyContent: 'center',
+          opacity: mounted ? 1 : 0,
+          transform: mounted ? 'translateY(0)' : 'translateY(15px)',
+          transition: 'opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1), transform 0.7s cubic-bezier(0.16, 1, 0.3, 1)',
+        }}
+      >
+
         {/* Slide Content Grid with Ultra-Smooth Fade & Scale Transition */}
         <div
           style={{
             display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))',
+            gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
             gap: '3.5rem',
             alignItems: 'center',
-            minHeight: '480px',
+            minHeight: '440px',
             opacity: isFading ? 0 : 1,
             transform: isFading ? 'translateY(12px) scale(0.98)' : 'translateY(0) scale(1)',
             transition: 'opacity 0.45s ease-in-out, transform 0.45s cubic-bezier(0.16, 1, 0.3, 1)',
@@ -326,19 +336,20 @@ export function HeroSlider({ initialHeroData }: HeroSliderProps) {
               </span>
             </div>
 
-            {/* Title - Strictly 2 lines */}
+            {/* Title - Fully visible, responsive headline without clipping */}
             <h1
               style={{
-                fontSize: 'clamp(1.75rem, 3.2vw, 2.75rem)',
+                fontSize: 'clamp(1.85rem, 3.5vw, 2.75rem)',
                 fontWeight: 900,
-                lineHeight: 1.2,
+                lineHeight: 1.25,
                 color: '#FFFFFF',
                 letterSpacing: '-0.02em',
                 margin: 0,
+                wordBreak: 'break-word',
               }}
             >
-              <div style={{ whiteSpace: 'nowrap' }}>{currentSlide.headlineFixed}</div>
-              <div style={{ color: '#FF6A00', whiteSpace: 'nowrap' }}>
+              <div>{currentSlide.headlineFixed}</div>
+              <div style={{ color: '#FF6A00' }}>
                 {currentSlide.headlineAccent}
               </div>
             </h1>
@@ -346,6 +357,7 @@ export function HeroSlider({ initialHeroData }: HeroSliderProps) {
             <p style={{ fontSize: '1.1rem', color: '#CBD5E1', lineHeight: 1.65, margin: 0 }}>
               {currentSlide.subdescription}
             </p>
+
 
             {/* Pill Badges */}
             <div
