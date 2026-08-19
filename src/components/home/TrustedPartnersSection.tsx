@@ -133,8 +133,8 @@ export function TrustedPartnersSection({ topCaption, headlineText, clientLogos }
       }}
     >
       <div className="container" style={{ maxWidth: '1200px', margin: '0 auto', padding: '0 1.5rem' }}>
-        {/* Title Header Section */}
-        <div style={{ textAlign: 'center', marginBottom: '3.5rem' }}>
+        {/* Title Header Section (Animates from TOP) */}
+        <div className="reveal-top" style={{ textAlign: 'center', marginBottom: '3.5rem' }}>
           <h2
             style={{
               fontSize: 'clamp(2rem, 4vw, 2.75rem)',
@@ -162,7 +162,7 @@ export function TrustedPartnersSection({ topCaption, headlineText, clientLogos }
           </p>
         </div>
 
-        {/* Floating White Card Logo Grid (Exact 2 Rows x 5 Columns matching reference image) */}
+        {/* Floating White Card Logo Grid (Left items animate from LEFT, Right items animate from RIGHT) */}
         <div
           style={{
             display: 'grid',
@@ -172,40 +172,49 @@ export function TrustedPartnersSection({ topCaption, headlineText, clientLogos }
             marginBottom: '3.5rem',
           }}
         >
-          {defaultBrands.map((brand) => (
-            <div
-              key={brand.id}
-              style={{
-                backgroundColor: '#FFFFFF',
-                borderRadius: '16px',
-                padding: '1.25rem 1.5rem',
-                height: '84px',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                boxShadow: '0 10px 30px -5px rgba(0, 0, 0, 0.08), 0 4px 12px rgba(0, 0, 0, 0.03)',
-                border: '1px solid rgba(226, 232, 240, 0.9)',
-                transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
-                cursor: 'pointer',
-              }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.transform = 'translateY(-6px)';
-                e.currentTarget.style.boxShadow = '0 20px 40px -5px rgba(0, 0, 0, 0.14), 0 8px 20px rgba(0, 0, 0, 0.06)';
-                e.currentTarget.style.borderColor = 'rgba(255, 106, 0, 0.4)';
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.transform = 'translateY(0)';
-                e.currentTarget.style.boxShadow = '0 10px 30px -5px rgba(0, 0, 0, 0.08), 0 4px 12px rgba(0, 0, 0, 0.03)';
-                e.currentTarget.style.borderColor = 'rgba(226, 232, 240, 0.9)';
-              }}
-            >
-              {brand.render()}
-            </div>
-          ))}
+          {defaultBrands.map((brand, idx) => {
+            // Alternate left & right entrance with staggered delays
+            const isLeft = idx % 2 === 0;
+            const dirClass = isLeft ? 'reveal-left' : 'reveal-right';
+            const delayMs = (idx % 5) * 100 + 100;
+            const delayClass = `delay-${delayMs}`;
+
+            return (
+              <div
+                key={brand.id}
+                className={`${dirClass} ${delayClass}`}
+                style={{
+                  backgroundColor: '#FFFFFF',
+                  borderRadius: '16px',
+                  padding: '1.25rem 1.5rem',
+                  height: '84px',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  boxShadow: '0 10px 30px -5px rgba(0, 0, 0, 0.08), 0 4px 12px rgba(0, 0, 0, 0.03)',
+                  border: '1px solid rgba(226, 232, 240, 0.9)',
+                  transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+                  cursor: 'pointer',
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.transform = 'translateY(-6px)';
+                  e.currentTarget.style.boxShadow = '0 20px 40px -5px rgba(0, 0, 0, 0.14), 0 8px 20px rgba(0, 0, 0, 0.06)';
+                  e.currentTarget.style.borderColor = 'rgba(255, 106, 0, 0.4)';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.transform = 'translateY(0)';
+                  e.currentTarget.style.boxShadow = '0 10px 30px -5px rgba(0, 0, 0, 0.08), 0 4px 12px rgba(0, 0, 0, 0.03)';
+                  e.currentTarget.style.borderColor = 'rgba(226, 232, 240, 0.9)';
+                }}
+              >
+                {brand.render()}
+              </div>
+            );
+          })}
         </div>
 
-        {/* Bottom Centered Gradient Pill CTA Button (Exact match to reference image) */}
-        <div style={{ display: 'flex', justifyContent: 'center' }}>
+        {/* Bottom Centered Gradient Pill CTA Button (Animates from BOTTOM) */}
+        <div className="reveal-bottom delay-300" style={{ display: 'flex', justifyContent: 'center' }}>
           <Link href="/contact" style={{ textDecoration: 'none' }}>
             <button
               style={{
@@ -241,3 +250,4 @@ export function TrustedPartnersSection({ topCaption, headlineText, clientLogos }
     </section>
   );
 }
+

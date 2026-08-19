@@ -16,6 +16,7 @@ import { Accordion } from '../components/ui/Accordion';
 import { FreeAuditForm } from '../components/forms/FreeAuditForm';
 import { HeroSlider } from '../components/home/HeroSlider';
 import { TrustedPartnersSection } from '../components/home/TrustedPartnersSection';
+import { ScrollRevealProvider } from '../components/ui/ScrollReveal';
 import {
   ArrowRight,
   CheckCircle2,
@@ -126,228 +127,277 @@ export default async function HomePage() {
   ];
 
   return (
-    <div style={{ backgroundColor: 'var(--color-background)', minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
-      {/* 1. Top Bar */}
-      <TopInfoBar />
+    <ScrollRevealProvider>
+      <div style={{ backgroundColor: 'var(--color-background)', minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
+        {/* 1. Top Bar */}
+        <TopInfoBar />
 
-      {/* 2. Header */}
-      <Header />
+        {/* 2. Header */}
+        <Header />
 
-      {/* 3. Interactive Multi-Slide Hero Banner Slider */}
-      <HeroSlider initialHeroData={hero} />
+        {/* 3. Interactive Multi-Slide Hero Banner Slider */}
+        <HeroSlider initialHeroData={hero} />
 
-      {/* 4. Trusted Partners & Brands Section (Exact Match to Reference Image) */}
-      <TrustedPartnersSection
-        topCaption={settingsData.partnersSection?.topCaption}
-        headlineText={settingsData.partnersSection?.headlineText}
-        clientLogos={clientLogos}
-      />
+        {/* 4. Trusted Partners & Brands Section (Exact Match to Reference Image with Left, Right, Top, Bottom Entrance Animations) */}
+        <TrustedPartnersSection
+          topCaption={settingsData.partnersSection?.topCaption}
+          headlineText={settingsData.partnersSection?.headlineText}
+          clientLogos={clientLogos}
+        />
 
-      {/* 5. Services Grid */}
-      <section style={{ padding: '5rem 0' }}>
-        <Container>
-          <SectionHeading
-            badge="Core Offerings"
-            title="Full-Spectrum Digital & Technology Services"
-            description="Built by senior full-stack architects using modern TypeScript & cloud infrastructure standards."
-          />
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: '2rem' }}>
-            {servicesList.map((srv, idx) => (
-              <Card key={idx} hoverable style={{ padding: '2.5rem', display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
-                <div><Code2 size={24} color="#FF6A00" /></div>
-                <h3 style={{ fontSize: '1.25rem', fontWeight: 800, color: 'var(--color-heading)' }}>{srv.title}</h3>
-                <p style={{ color: 'var(--color-body)', lineHeight: 1.6, flex: 1 }}>{srv.summary || srv.description}</p>
-                <a href={`/services/${srv.slug}`}>
-                  <Button variant="outline" size="sm" icon={<ArrowRight size={14} />}>View Capability</Button>
-                </a>
-              </Card>
-            ))}
-          </div>
-        </Container>
-      </section>
+        {/* 5. Core Offerings / Services Grid (Left, Top, Bottom, Right Directional Animations) */}
+        <section style={{ padding: '5rem 0' }}>
+          <Container>
+            <div className="reveal-top">
+              <SectionHeading
+                badge="Core Offerings"
+                title="Full-Spectrum Digital & Technology Services"
+                description="Built by senior full-stack architects using modern TypeScript & cloud infrastructure standards."
+              />
+            </div>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: '2rem' }}>
+              {servicesList.map((srv, idx) => {
+                // Directional entrance mapping: 0 -> Left, 1 -> Top, 2 -> Bottom, 3 -> Right
+                const directions = ['reveal-left', 'reveal-top', 'reveal-bottom', 'reveal-right'];
+                const dirClass = directions[idx % 4];
+                const delayClass = `delay-${(idx + 1) * 100}`;
 
-      {/* 6. Case Studies */}
-      <section style={{ backgroundColor: '#F8FAFC', padding: '5rem 0', borderTop: '1px solid var(--color-border)', borderBottom: '1px solid var(--color-border)' }}>
-        <Container>
-          <SectionHeading
-            badge="Proven Results"
-            title="Enterprise Client Case Studies"
-            description="Real outcomes delivered across Fintech, Healthcare, E-Commerce, and Supply Chain."
-          />
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '2rem' }}>
-            {caseStudies.map((cs, idx) => (
-              <Card key={idx} style={{ padding: '2.5rem', display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                  <Badge variant="accent" size="sm">{cs.industry || 'Enterprise'}</Badge>
-                  <span style={{ fontSize: '0.8125rem', fontWeight: 700, color: '#64748B' }}>{cs.clientName}</span>
-                </div>
-                <h3 style={{ fontSize: '1.25rem', fontWeight: 800, color: 'var(--color-heading)' }}>{cs.title}</h3>
-                <p style={{ color: 'var(--color-body)', lineHeight: 1.6, flex: 1 }}>{cs.summary}</p>
-                <a href={`/case-studies/${cs.slug}`}>
-                  <Button variant="primary" size="sm" icon={<ArrowRight size={14} />}>Read Case Study</Button>
-                </a>
-              </Card>
-            ))}
-          </div>
-        </Container>
-      </section>
+                return (
+                  <div key={idx} className={`${dirClass} ${delayClass}`}>
+                    <Card hoverable style={{ padding: '2.5rem', display: 'flex', flexDirection: 'column', gap: '1.25rem', height: '100%' }}>
+                      <div><Code2 size={24} color="#FF6A00" /></div>
+                      <h3 style={{ fontSize: '1.25rem', fontWeight: 800, color: 'var(--color-heading)' }}>{srv.title}</h3>
+                      <p style={{ color: 'var(--color-body)', lineHeight: 1.6, flex: 1 }}>{srv.summary || srv.description}</p>
+                      <a href={`/services/${srv.slug}`}>
+                        <Button variant="outline" size="sm" icon={<ArrowRight size={14} />}>View Capability</Button>
+                      </a>
+                    </Card>
+                  </div>
+                );
+              })}
+            </div>
+          </Container>
+        </section>
 
-      {/* 7. Process Section */}
-      <section style={{ padding: '5rem 0' }}>
-        <Container>
-          <SectionHeading
-            badge="Engineering Methodology"
-            title="How We Architect & Deliver Solutions"
-            description="A systematic 4-step delivery pipeline ensuring zero technical debt and sub-second performance."
-          />
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '2rem' }}>
-            {processSteps.map((step, idx) => (
-              <div key={idx} style={{ display: 'flex', flexDirection: 'column', gap: '1rem', padding: '2rem', backgroundColor: '#FFFFFF', borderRadius: 'var(--radius-lg)', border: '1px solid var(--color-border)' }}>
-                <span style={{ fontSize: '2rem', fontWeight: 900, color: 'var(--color-orange)' }}>{step.num}</span>
-                <h4 style={{ fontSize: '1.125rem', fontWeight: 800, color: 'var(--color-heading)' }}>{step.title}</h4>
-                <p style={{ fontSize: '0.875rem', color: 'var(--color-body)', lineHeight: 1.6 }}>{step.desc}</p>
-              </div>
-            ))}
-          </div>
-        </Container>
-      </section>
+        {/* 6. Case Studies */}
+        <section style={{ backgroundColor: '#F8FAFC', padding: '5rem 0', borderTop: '1px solid var(--color-border)', borderBottom: '1px solid var(--color-border)' }}>
+          <Container>
+            <div className="reveal-top">
+              <SectionHeading
+                badge="Proven Results"
+                title="Enterprise Client Case Studies"
+                description="Real outcomes delivered across Fintech, Healthcare, E-Commerce, and Supply Chain."
+              />
+            </div>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '2rem' }}>
+              {caseStudies.map((cs, idx) => {
+                const dirClass = idx % 2 === 0 ? 'reveal-left' : 'reveal-right';
+                const delayClass = `delay-${(idx + 1) * 150}`;
+                return (
+                  <div key={idx} className={`${dirClass} ${delayClass}`}>
+                    <Card style={{ padding: '2.5rem', display: 'flex', flexDirection: 'column', gap: '1.25rem', height: '100%' }}>
+                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                        <Badge variant="accent" size="sm">{cs.industry || 'Enterprise'}</Badge>
+                        <span style={{ fontSize: '0.8125rem', fontWeight: 700, color: '#64748B' }}>{cs.clientName}</span>
+                      </div>
+                      <h3 style={{ fontSize: '1.25rem', fontWeight: 800, color: 'var(--color-heading)' }}>{cs.title}</h3>
+                      <p style={{ color: 'var(--color-body)', lineHeight: 1.6, flex: 1 }}>{cs.summary}</p>
+                      <a href={`/case-studies/${cs.slug}`}>
+                        <Button variant="primary" size="sm" icon={<ArrowRight size={14} />}>Read Case Study</Button>
+                      </a>
+                    </Card>
+                  </div>
+                );
+              })}
+            </div>
+          </Container>
+        </section>
 
-      {/* 8. Pricing Packages */}
-      <section style={{ backgroundColor: '#F8FAFC', padding: '5rem 0', borderTop: '1px solid var(--color-border)', borderBottom: '1px solid var(--color-border)' }}>
-        <Container>
-          <SectionHeading
-            badge="Transparent Pricing"
-            title="Investment Plans & Packages"
-            description="Clear project scopes backed by enterprise SLA guarantees and source code ownership."
-          />
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '2rem' }}>
-            {finalPackagesList.map((pkg, idx) => (
-              <Card key={idx} style={{ padding: '2.5rem', display: 'flex', flexDirection: 'column', gap: '1.25rem', border: pkg.isPopular || pkg.isRecommended ? '2px solid var(--color-orange)' : '1px solid var(--color-border)', position: 'relative' }}>
-                {(pkg.isPopular || pkg.isRecommended) && (
-                  <span style={{ position: 'absolute', top: '-12px', right: '20px', backgroundColor: 'var(--color-orange)', color: '#FFFFFF', padding: '0.2rem 0.75rem', borderRadius: '9999px', fontSize: '0.75rem', fontWeight: 800, textTransform: 'uppercase' }}>
-                    Most Popular
+        {/* 7. Process Section */}
+        <section style={{ padding: '5rem 0' }}>
+          <Container>
+            <div className="reveal-top">
+              <SectionHeading
+                badge="Engineering Methodology"
+                title="How We Architect & Deliver Solutions"
+                description="A systematic 4-step delivery pipeline ensuring zero technical debt and sub-second performance."
+              />
+            </div>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '2rem' }}>
+              {processSteps.map((step, idx) => {
+                const directions = ['reveal-left', 'reveal-top', 'reveal-bottom', 'reveal-right'];
+                const dirClass = directions[idx % 4];
+                const delayClass = `delay-${(idx + 1) * 100}`;
+                return (
+                  <div key={idx} className={`${dirClass} ${delayClass}`} style={{ display: 'flex', flexDirection: 'column', gap: '1rem', padding: '2rem', backgroundColor: '#FFFFFF', borderRadius: 'var(--radius-lg)', border: '1px solid var(--color-border)' }}>
+                    <span style={{ fontSize: '2rem', fontWeight: 900, color: 'var(--color-orange)' }}>{step.num}</span>
+                    <h4 style={{ fontSize: '1.125rem', fontWeight: 800, color: 'var(--color-heading)' }}>{step.title}</h4>
+                    <p style={{ fontSize: '0.875rem', color: 'var(--color-body)', lineHeight: 1.6 }}>{step.desc}</p>
+                  </div>
+                );
+              })}
+            </div>
+          </Container>
+        </section>
+
+        {/* 8. Pricing Packages */}
+        <section style={{ backgroundColor: '#F8FAFC', padding: '5rem 0', borderTop: '1px solid var(--color-border)', borderBottom: '1px solid var(--color-border)' }}>
+          <Container>
+            <div className="reveal-top">
+              <SectionHeading
+                badge="Transparent Pricing"
+                title="Investment Plans & Packages"
+                description="Clear project scopes backed by enterprise SLA guarantees and source code ownership."
+              />
+            </div>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '2rem' }}>
+              {finalPackagesList.map((pkg, idx) => {
+                let dirClass = 'reveal-bottom';
+                if (idx === 0) dirClass = 'reveal-left';
+                if (idx === 1) dirClass = 'reveal-zoom';
+                if (idx === 2) dirClass = 'reveal-right';
+                const delayClass = `delay-${(idx + 1) * 150}`;
+
+                return (
+                  <div key={idx} className={`${dirClass} ${delayClass}`}>
+                    <Card style={{ padding: '2.5rem', display: 'flex', flexDirection: 'column', gap: '1.25rem', border: pkg.isPopular || pkg.isRecommended ? '2px solid var(--color-orange)' : '1px solid var(--color-border)', position: 'relative', height: '100%' }}>
+                      {(pkg.isPopular || pkg.isRecommended) && (
+                        <span style={{ position: 'absolute', top: '-12px', right: '20px', backgroundColor: 'var(--color-orange)', color: '#FFFFFF', padding: '0.2rem 0.75rem', borderRadius: '9999px', fontSize: '0.75rem', fontWeight: 800, textTransform: 'uppercase' }}>
+                          Most Popular
+                        </span>
+                      )}
+                      <h3 style={{ fontSize: '1.25rem', fontWeight: 800, color: 'var(--color-heading)' }}>{pkg.name}</h3>
+                      <div style={{ fontSize: '2rem', fontWeight: 800, color: 'var(--color-primary-navy)' }}>
+                        {pkg.price} <span style={{ fontSize: '0.875rem', fontWeight: 500, color: 'var(--color-body)' }}>{pkg.period}</span>
+                      </div>
+                      <p style={{ fontSize: '0.875rem', color: 'var(--color-body)', lineHeight: 1.6 }}>{pkg.desc || pkg.description}</p>
+                      <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', flex: 1, margin: '1rem 0' }}>
+                        {(pkg.features || []).map((feat, fIdx) => (
+                          <div key={fIdx} style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.875rem', color: 'var(--color-heading)' }}>
+                            <CheckCircle2 size={16} color="var(--color-orange)" />
+                            <span>{feat}</span>
+                          </div>
+                        ))}
+                      </div>
+                      <a href="/contact">
+                        <Button variant={pkg.isPopular || pkg.isRecommended ? 'accent' : 'primary'} size="md" style={{ width: '100%' }} icon={<ArrowRight size={16} />}>
+                          Select Plan
+                        </Button>
+                      </a>
+                    </Card>
+                  </div>
+                );
+              })}
+            </div>
+          </Container>
+        </section>
+
+        {/* 9. Testimonials */}
+        <section style={{ padding: '5rem 0' }}>
+          <Container>
+            <div className="reveal-top">
+              <SectionHeading
+                badge="Client Feedback"
+                title="What Technology Executives Say"
+                description="Verified testimonials from CTOs, VPs, and Product Leads."
+              />
+            </div>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '2rem' }}>
+              {testimonialsList.map((item, idx) => {
+                const dirClass = idx % 2 === 0 ? 'reveal-left' : 'reveal-right';
+                const delayClass = `delay-${(idx + 1) * 150}`;
+                return (
+                  <div key={idx} className={`${dirClass} ${delayClass}`}>
+                    <Card style={{ padding: '2rem', display: 'flex', flexDirection: 'column', gap: '1rem', height: '100%' }}>
+                      <div style={{ display: 'flex', gap: '0.25rem' }}>
+                        {[...Array(item.rating || 5)].map((_, i) => (
+                          <Star key={i} size={16} fill="var(--color-orange)" color="var(--color-orange)" />
+                        ))}
+                      </div>
+                      <p style={{ color: 'var(--color-body)', lineHeight: 1.6, fontStyle: 'italic', flex: 1 }}>"{item.content}"</p>
+                      <div style={{ borderTop: '1px solid var(--color-border)', paddingTop: '0.75rem' }}>
+                        <div style={{ fontWeight: 800, color: 'var(--color-heading)' }}>{item.clientName}</div>
+                        <div style={{ fontSize: '0.8125rem', color: '#64748B' }}>{item.clientRole}</div>
+                      </div>
+                    </Card>
+                  </div>
+                );
+              })}
+            </div>
+          </Container>
+        </section>
+
+        {/* 10. Instant Tech Audit CTA */}
+        <section
+          style={{
+            background: 'radial-gradient(100% 100% at 50% 0%, #082E66 0%, #031735 60%, #010B1B 100%)',
+            padding: '5.5rem 0',
+            color: '#FFFFFF',
+            position: 'relative',
+            overflow: 'hidden',
+            borderTop: '1px solid rgba(255, 255, 255, 0.1)',
+            borderBottom: '1px solid rgba(255, 255, 255, 0.1)',
+          }}
+        >
+          <div style={{ position: 'absolute', top: '-10%', right: '10%', width: '400px', height: '400px', background: 'radial-gradient(circle, rgba(255, 106, 0, 0.2) 0%, rgba(0,0,0,0) 70%)', filter: 'blur(50px)', pointerEvents: 'none' }} />
+
+          <Container style={{ position: 'relative', zIndex: 1 }}>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '4rem', alignItems: 'center' }}>
+              <div className="reveal-left" style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
+                <div>
+                  <span style={{ backgroundColor: 'rgba(255, 106, 0, 0.15)', color: '#FF8A33', border: '1px solid rgba(255, 106, 0, 0.3)', padding: '0.35rem 0.85rem', borderRadius: '9999px', fontSize: '0.8125rem', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.08em' }}>
+                    ⚡ Free Technical Audit
                   </span>
-                )}
-                <h3 style={{ fontSize: '1.25rem', fontWeight: 800, color: 'var(--color-heading)' }}>{pkg.name}</h3>
-                <div style={{ fontSize: '2rem', fontWeight: 800, color: 'var(--color-primary-navy)' }}>
-                  {pkg.price} <span style={{ fontSize: '0.875rem', fontWeight: 500, color: 'var(--color-body)' }}>{pkg.period}</span>
                 </div>
-                <p style={{ fontSize: '0.875rem', color: 'var(--color-body)', lineHeight: 1.6 }}>{pkg.desc || pkg.description}</p>
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', flex: 1, margin: '1rem 0' }}>
-                  {(pkg.features || []).map((feat, fIdx) => (
-                    <div key={fIdx} style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.875rem', color: 'var(--color-heading)' }}>
-                      <CheckCircle2 size={16} color="var(--color-orange)" />
-                      <span>{feat}</span>
-                    </div>
-                  ))}
-                </div>
-                <a href="/contact">
-                  <Button variant={pkg.isPopular || pkg.isRecommended ? 'accent' : 'primary'} size="md" style={{ width: '100%' }} icon={<ArrowRight size={16} />}>
-                    Select Plan
-                  </Button>
-                </a>
-              </Card>
-            ))}
-          </div>
-        </Container>
-      </section>
+                <h2 style={{ fontSize: 'clamp(2rem, 4vw, 3rem)', fontWeight: 900, color: '#FFFFFF', lineHeight: 1.15, letterSpacing: '-0.02em' }}>
+                  Get a Free Technical & SEO Audit of Your Website
+                </h2>
+                <p style={{ color: '#94A3B8', fontSize: '1.125rem', lineHeight: 1.65 }}>
+                  Our senior software architects will inspect your site performance, security headers, Core Web Vitals, and keyword ranking potential with an actionable report.
+                </p>
 
-      {/* 9. Testimonials */}
-      <section style={{ padding: '5rem 0' }}>
-        <Container>
-          <SectionHeading
-            badge="Client Feedback"
-            title="What Technology Executives Say"
-            description="Verified testimonials from CTOs, VPs, and Product Leads."
-          />
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '2rem' }}>
-            {testimonialsList.map((item, idx) => (
-              <Card key={idx} style={{ padding: '2rem', display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-                <div style={{ display: 'flex', gap: '0.25rem' }}>
-                  {[...Array(item.rating || 5)].map((_, i) => (
-                    <Star key={i} size={16} fill="var(--color-orange)" color="var(--color-orange)" />
-                  ))}
-                </div>
-                <p style={{ color: 'var(--color-body)', lineHeight: 1.6, fontStyle: 'italic', flex: 1 }}>"{item.content}"</p>
-                <div style={{ borderTop: '1px solid var(--color-border)', paddingTop: '0.75rem' }}>
-                  <div style={{ fontWeight: 800, color: 'var(--color-heading)' }}>{item.clientName}</div>
-                  <div style={{ fontSize: '0.8125rem', color: '#64748B' }}>{item.clientRole}</div>
-                </div>
-              </Card>
-            ))}
-          </div>
-        </Container>
-      </section>
-
-      {/* 10. Instant Tech Audit CTA (Modern Glassmorphism Design) */}
-      <section
-        style={{
-          background: 'radial-gradient(100% 100% at 50% 0%, #082E66 0%, #031735 60%, #010B1B 100%)',
-          padding: '5.5rem 0',
-          color: '#FFFFFF',
-          position: 'relative',
-          overflow: 'hidden',
-          borderTop: '1px solid rgba(255, 255, 255, 0.1)',
-          borderBottom: '1px solid rgba(255, 255, 255, 0.1)',
-        }}
-      >
-        {/* Ambient Radial Glow */}
-        <div style={{ position: 'absolute', top: '-10%', right: '10%', width: '400px', height: '400px', background: 'radial-gradient(circle, rgba(255, 106, 0, 0.2) 0%, rgba(0,0,0,0) 70%)', filter: 'blur(50px)', pointerEvents: 'none' }} />
-
-        <Container style={{ position: 'relative', zIndex: 1 }}>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '4rem', alignItems: 'center' }}>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
-              <div>
-                <span style={{ backgroundColor: 'rgba(255, 106, 0, 0.15)', color: '#FF8A33', border: '1px solid rgba(255, 106, 0, 0.3)', padding: '0.35rem 0.85rem', borderRadius: '9999px', fontSize: '0.8125rem', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.08em' }}>
-                  ⚡ Free Technical Audit
-                </span>
-              </div>
-              <h2 style={{ fontSize: 'clamp(2rem, 4vw, 3rem)', fontWeight: 900, color: '#FFFFFF', lineHeight: 1.15, letterSpacing: '-0.02em' }}>
-                Get a Free Technical & SEO Audit of Your Website
-              </h2>
-              <p style={{ color: '#94A3B8', fontSize: '1.125rem', lineHeight: 1.65 }}>
-                Our senior software architects will inspect your site performance, security headers, Core Web Vitals, and keyword ranking potential with an actionable report.
-              </p>
-
-              {/* Audit Highlights */}
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem', marginTop: '0.5rem' }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', color: '#CBD5E1', fontSize: '0.9375rem', fontWeight: 600 }}>
-                  <span style={{ color: '#10B981', fontWeight: 800 }}>✓</span> Core Web Vitals & Speed Performance Analysis
-                </div>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', color: '#CBD5E1', fontSize: '0.9375rem', fontWeight: 600 }}>
-                  <span style={{ color: '#10B981', fontWeight: 800 }}>✓</span> Security Vulnerability & OWASP Inspection
-                </div>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', color: '#CBD5E1', fontSize: '0.9375rem', fontWeight: 600 }}>
-                  <span style={{ color: '#10B981', fontWeight: 800 }}>✓</span> Competitor SEO & Organic Keyword Opportunity
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem', marginTop: '0.5rem' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', color: '#CBD5E1', fontSize: '0.9375rem', fontWeight: 600 }}>
+                    <span style={{ color: '#10B981', fontWeight: 800 }}>✓</span> Core Web Vitals & Speed Performance Analysis
+                  </div>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', color: '#CBD5E1', fontSize: '0.9375rem', fontWeight: 600 }}>
+                    <span style={{ color: '#10B981', fontWeight: 800 }}>✓</span> Security Vulnerability & OWASP Inspection
+                  </div>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', color: '#CBD5E1', fontSize: '0.9375rem', fontWeight: 600 }}>
+                    <span style={{ color: '#10B981', fontWeight: 800 }}>✓</span> Competitor SEO & Organic Keyword Opportunity
+                  </div>
                 </div>
               </div>
+
+              <div className="reveal-right delay-200">
+                <FreeAuditForm />
+              </div>
             </div>
+          </Container>
+        </section>
 
-            <div>
-              <FreeAuditForm />
+        {/* 11. FAQs */}
+        <section style={{ padding: '5rem 0' }}>
+          <Container>
+            <div className="reveal-top">
+              <SectionHeading
+                badge="Got Questions?"
+                title="Frequently Asked Questions"
+                description="Clear answers regarding project timelines, tech stacks, SLAs, and deliverables."
+              />
             </div>
-          </div>
-        </Container>
-      </section>
+            <div className="reveal-bottom delay-200" style={{ maxWidth: '800px', margin: '0 auto' }}>
+              <Accordion items={finalFaqsList.map((f, idx) => ({ id: f.id || `faq-${idx}`, title: f.title, content: f.content }))} />
+            </div>
+          </Container>
+        </section>
 
-      {/* 11. FAQs */}
-      <section style={{ padding: '5rem 0' }}>
-        <Container>
-          <SectionHeading
-            badge="Got Questions?"
-            title="Frequently Asked Questions"
-            description="Clear answers regarding project timelines, tech stacks, SLAs, and deliverables."
-          />
-          <div style={{ maxWidth: '800px', margin: '0 auto' }}>
-            <Accordion items={finalFaqsList.map((f, idx) => ({ id: f.id || `faq-${idx}`, title: f.title, content: f.content }))} />
-          </div>
-        </Container>
-      </section>
-
-      {/* Floating CTA & Footer */}
-      <FloatingActions />
-      <MobileConversionBar />
-      <Footer />
-    </div>
+        {/* Floating CTA & Footer */}
+        <FloatingActions />
+        <MobileConversionBar />
+        <Footer />
+      </div>
+    </ScrollRevealProvider>
   );
 }
+
